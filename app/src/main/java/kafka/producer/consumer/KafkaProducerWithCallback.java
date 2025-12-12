@@ -24,18 +24,20 @@ public class KafkaProducerWithCallback {
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
         log.info("Kafka Producer created successfully");
 
-        // creating kafka producer record
-        ProducerRecord<String, String> record = new ProducerRecord<>("test-topic", "key2", "value2");
+        for (long i = 0; i <= 1000000000; i++) {
+            // creating kafka producer record
+            ProducerRecord<String, String> record = new ProducerRecord<>("test-topic", "key2", "value2" + i);
 
-        // calling the send method with a callback
-        producer.send(record, (metadata, exception) -> {
-            if (exception == null) {
-                log.info("Message sent successfully to topic: {}, partition: {}, offset: {}",
-                        metadata.topic(), metadata.partition(), metadata.offset());
-            } else {
-                log.error("Error while producing message: ", exception);
-            }
-        });
+            // calling the send method with a callback
+            producer.send(record, (metadata, exception) -> {
+                if (exception == null) {
+                    log.info("Message sent successfully to topic: {}, partition: {}, offset: {}",
+                            metadata.topic(), metadata.partition(), metadata.offset());
+                } else {
+                    log.error("Error while producing message: ", exception);
+                }
+            });
+        }
 
         // closing the producer
         producer.flush();
